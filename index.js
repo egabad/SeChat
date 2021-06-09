@@ -13,28 +13,32 @@ app.get('/', (req, res) => {
 
 let room = '';
 io.on('connection', (socket) => {
+    let msg = '';
     let username = anonymousNames[Math.floor(Math.random() * anonymousNames.length)];
-    console.log(`user "${username}" connected`);
+
     socket.on('join room', (data) => {
-        console.log(`in room "${data.room}"`);
-        
         room = data.room;
         socket.join(room);
 
-        let msg = `user ${username} has joined room ${room}`;
-        io.to(room).emit('chat message', { msg: msg, id: username });
+        msg = `${username} has joined ${room}`;
+        io.to(room).emit('notification', { msg: msg, room: room });
+        console.log(msg);
     });
-    
+
     socket.on('chat message', (data) => {
-        console.log(`message in ${data.room}: ${data.msg}`);
-        // Broadcast message to everyone
         io.to(data.room).emit('chat message', { msg: data.msg, id: username });
+        console.log(data.msg);
+    });
+
+    socket.on('notification', (data) => {
+        io.to(data.room).emit('notification', { msg: msg, room: room });
+        console.log(data.msg);
     });
 
     socket.on('disconnect', () => {
-        console.log(`user ${username} disconnected`);
-        let msg = `user ${username} has left room ${room}`
-        io.to(room).emit('chat message', { msg: msg, id: username });
+        msg = `${username} has disconnected`;
+        io.to(room).emit('notification', { msg: msg, room: room });
+        console.log(msg);
     });
 });
 

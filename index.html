@@ -89,8 +89,16 @@
             }
         });
         
-        // Receive event: chat message from server
+        // Receive event: chat message from other users
         socket.on('chat message', function (data) {
+            var item = document.createElement('li');
+            item.textContent = data.id + ": " + data.msg;
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
+        // Receive event: message from server
+        socket.on('notification', function (data) {
             var item = document.createElement('li');
             item.textContent = data.msg;
             messages.appendChild(item);
