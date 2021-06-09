@@ -1,6 +1,6 @@
 {
   "name": "sechat",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "SeChat: a serverless, userless, and traceless messaging platform",
   "main": "index.js",
   "scripts": {
